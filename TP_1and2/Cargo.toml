@@ -1,0 +1,9 @@
+[package]
+name = "tp-1-and-2"
+version = "0.1.0"
+authors = ["Mikkel ALMONTE--RINGAUD"]
+description = "Module contenant ma résolution du TP 1 et 2."
+edition = "2021"
+
+[dependencies]
+inquire = "0.7.5"
