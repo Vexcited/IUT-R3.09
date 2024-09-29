@@ -1,17 +1,9 @@
+use crate::input::normalize;
 const ALPHABET_LEN: u8 = 26;
-
-/// Convertir la clé pour qu'elle soit utilisable.
-fn convert_key (key: &str) -> String {
-  // On supprime les espaces, les caractères spéciaux et les chiffres de la clé.
-  let key: String = key.chars().filter(|&c| c.is_ascii_alphabetic()).collect();
-
-  // On convertit la clé en minuscule.
-  key.to_ascii_lowercase()
-}
 
 /// Chiffrer un message en utilisant le chiffre de Vigenère.
 pub fn vigenere_encrypt (message: &str, key: &str) -> String {
-  let key = convert_key(key);
+  let key = normalize(key);
 
   let key_length = key.len();
   if key_length == 0 {
@@ -44,7 +36,7 @@ pub fn vigenere_encrypt (message: &str, key: &str) -> String {
 
 /// Déchiffrer un message en utilisant le chiffre de Vigenère.
 pub fn vigenere_decrypt (ciphertext: &str, key: &str) -> String {
-  let key = convert_key(key);
+  let key = normalize(key);
 
   let key_length = key.len();
   if key_length == 0 {
