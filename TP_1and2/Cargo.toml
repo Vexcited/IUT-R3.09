@@ -6,4 +6,5 @@ description = "Module contenant ma résolution du TP 1 et 2."
 edition = "2021"
 
 [dependencies]
-inquire = "0.7.5"
+clap = { version = "4.0", features = ["derive"] }
+clio = { version = "0.3.5", features = ["clap-parse"] }
