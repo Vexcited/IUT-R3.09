@@ -29,7 +29,7 @@ struct Cli {
 
   /// The encryption key (used only if method is encrypt or decrypt)
   #[arg(long)]
-  key: Option<String>,
+  key: Option<String>
 }
 
 /// Enum representing available methods
@@ -48,8 +48,9 @@ fn main() -> Result<()> {
 
   let output_data = match cli.method {
     Method::Kasiski => {
-      let result = kasiski_analysis(&input_data, 3);
-      if result.len() == 1 && result[0] == ('?' as usize) {
+      let result = kasiski_analysis(&input_data);
+      
+      if result.is_empty(){
         println!("Aucune hypothèse possible : ?");
       }
       else {
