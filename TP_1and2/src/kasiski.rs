@@ -1,83 +1,88 @@
 use std::{collections::HashMap, cmp::Reverse};
 use crate::{input::normalize, maths::pgcd};
 
-/// Trouver les sous-chaînes répétées d'une longueur minimale.
-fn find_repeated_fragments(cipher_text: &str, min_length: usize) -> HashMap<String, Vec<usize>> {
-  let mut repetitions: HashMap<String, Vec<usize>> = HashMap::new();
+const FRAGMENT_LEN: usize = 4;
 
-  // On parcourt le texte en cherchant des sous-chaînes répétées.
-  for i in 0..cipher_text.len() - min_length + 1 {
-    let fragment = &cipher_text[i..(i + min_length)];
+fn find_repeated_fragments(ciphertext: &str) -> HashMap<String, Vec<usize>> {
+  let mut fragments: HashMap<String, Vec<usize>> = HashMap::new();
+  let length = ciphertext.len();
 
-    for ii in (i + min_length)..(cipher_text.len() - min_length + 1) {
-      if &cipher_text[ii..(ii + min_length)] == fragment {
-        repetitions.entry(fragment.to_string())
-          .or_default()
-          .push(ii - i);
-      }
+  for fragment_length in FRAGMENT_LEN..=length / 2 {
+    for i in 0..=length - fragment_length {
+      let fragment = &ciphertext[i..i + fragment_length];
+      fragments.entry(fragment.to_string())
+        .or_default()
+        .push(i);
     }
   }
 
-  repetitions
-}
-
-/// On filtre les candidats qui peut rester en utilisant le PGCD.
-fn filter_candidates_by_pgcd(candidates: &[usize], distance: usize) -> Vec<usize> {
-  let mut temp: Vec<usize> = candidates.iter()
-      .map(|&candidate| pgcd(candidate, distance))
-      // On élimine les PGCD égaux à 1.
-      .filter(|&g| g > 1)
-      .collect();
-
-  // S'il y a des candidats restants...
-  if !temp.is_empty() {
-    temp.sort();
-
-    // On supprime les doublons.
-    temp.dedup();
-  }
-
-  temp
+  fragments.retain(|_, positions| positions.len() > 1);
+  fragments
 }
 
 /// Algorithme de Kasiski.
-pub fn kasiski_analysis(ciphertext: &str, min_fragment_length: usize) -> Vec<usize> {
+pub fn kasiski_analysis(ciphertext: &str) -> Vec<usize> {
+  // 0. Normaliser le texte chiffré, pour ne garder que les lettres alphabétiques.
   let ciphertext = normalize(ciphertext);
-  let repetitions = find_repeated_fragments(&ciphertext, min_fragment_length);
+    
+  // 1. En examinant le texte chiffré donné en entrée, trouver des fragments de texte qui se répètent.
+  let repetitions = find_repeated_fragments(&ciphertext);
 
-  // On retourne '?' si aucune répétition n'est trouvée.
-  if repetitions.is_empty() {
-    return vec!['?' as usize];
+  // 2. Calculer, pour chaque fragment, la distance entre les deux (ou plusieurs) occurrences.
+  let mut repet: Vec<(String, Vec<usize>)> = Vec::new();
+  for (fragment, positions) in &repetitions {
+    let mut fragment_distances: Vec<usize> = Vec::new();
+    for i in 0..positions.len() {
+      for j in i + 1..positions.len() {
+        fragment_distances.push(positions[j] - positions[i]);
+      }
+    }
+    repet.push((fragment.clone(), fragment_distances));
   }
 
+  // 3. Trier le tableau repet en ordre inverse de la taille du texte qui se répète.
+  repet.sort_by(|a, b| b.0.len().cmp(&a.0.len()));
+
+  // 4. Si le tableau repet est vide, retourner le symbole d'erreur.
+  if repet.is_empty() {
+      return vec!['?' as usize];
+  }
+
+  // 5. Si le tableau repet n’est pas vide, formuler l’hypothèse que la clé doit être un diviseur de la distance entre les occurrences.
   let mut candidates: Vec<usize> = Vec::new();
-
-  let mut repetitions_vec: Vec<_> = repetitions.values().collect();
-  // On trie les répétitions par longueur de fragment.
-  repetitions_vec.sort_by_key(|b| Reverse(b.len()));
-
-  for distances in repetitions_vec {
-    if let Some(&first_distance) = distances.first() {
-      // Initialiser les candidats avec les diviseurs de la première distance
-      if candidates.is_empty() {
-        candidates = (2..=first_distance).filter(|d| first_distance % d == 0).collect();
-      }
-      else {
-        // Affiner les candidats en utilisant le PGCD avec les autres distances
-        for &distance in distances {
-          let temp_candidates = filter_candidates_by_pgcd(&candidates, distance);
-          if !temp_candidates.is_empty() {
-            candidates = temp_candidates;
-          }
+  if let Some((_, fragment_distances)) = repet.first() {
+    for &distance in fragment_distances {
+      for i in 1..=distance {
+        if distance % i == 0 {
+          candidates.push(i);
         }
       }
     }
   }
 
-  if candidates.is_empty() {
-    vec!['?' as usize]
+  // 6. Traiter le tableau ligne par ligne.
+  for (_, fragment_distances) in &repet {
+    let mut temp: Vec<usize> = Vec::new();
+    for &distance in fragment_distances {
+      for &candidate in &candidates {
+          let gcd = pgcd(candidate, distance);
+          if gcd > 1 {
+              temp.push(gcd);
+          }
+      }
+    }
+
+    if !temp.is_empty() {
+        candidates = temp;
+    } else if repet.last().unwrap().1 != *fragment_distances {
+        continue;
+    } else {
+        break;
+    }
   }
-  else {
-    candidates
-  }
+
+  // 7. Retourner le tableau des candidats sans doublons.
+  candidates.sort_by_key(|&x| Reverse(x));
+  candidates.dedup();
+  candidates
 }
