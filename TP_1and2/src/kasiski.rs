@@ -45,7 +45,7 @@ pub fn kasiski_analysis(ciphertext: &str) -> Vec<usize> {
 
   // 4. Si le tableau repet est vide, retourner le symbole d'erreur.
   if repet.is_empty() {
-      return vec!['?' as usize];
+      return vec![];
   }
 
   // 5. Si le tableau repet n’est pas vide, formuler l’hypothèse que la clé doit être un diviseur de la distance entre les occurrences.
