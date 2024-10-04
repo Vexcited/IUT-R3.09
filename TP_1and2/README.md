@@ -41,4 +41,5 @@ echo "hello" | cargo run kasiski
 
 ## Tests pour Kasiski
 
-Le fichier `tests/20-output-world.txt` a été chiffré à partir de `tests/20-input.txt` avec la clé `WORLD`.
+- Le fichier `tests/20-output-world.txt` a été chiffré à partir de `tests/20-input.txt` avec la clé `WORLD` (5).
+- Le fichier `tests/30-output-td.txt` a été chiffré à partir de `test/30-input-td.txt` avec la clé `PARADIGM` (8).
