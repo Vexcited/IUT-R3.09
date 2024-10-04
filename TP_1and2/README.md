@@ -2,6 +2,8 @@
 
 ## Implémentation Vigenère
 
+J'ai décidé de rester dans l'implémentation simple proposée par Wikipédia et dCode, où seulement l'alphabet (`A-Za-z`) est géré.
+
 Concernant la clé : les espaces, caractères spéciaux et chiffres sont supprimés et la clé est convertie en minuscules.
 
 Concernant le texte à chiffrer : les espaces, caractères spéciaux et chiffres sont ignorés. Les lettres en majuscules sont chiffrées en majuscules et les lettres en minuscules sont chiffrées en minuscules.
@@ -43,3 +45,4 @@ echo "hello" | cargo run kasiski
 
 - Le fichier `tests/20-output-world.txt` a été chiffré à partir de `tests/20-input.txt` avec la clé `WORLD` (5).
 - Le fichier `tests/30-output-td.txt` a été chiffré à partir de `test/30-input-td.txt` avec la clé `PARADIGM` (8).
+- Le fichier `tests/50-special.txt` a été chiffré avec une clé de 9 caractères : `PARADIGME` (ce texte a été généré à partir d'un outil externe qui gère les caractères spéciaux)
