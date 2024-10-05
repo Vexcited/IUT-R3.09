@@ -21,7 +21,7 @@ cargo run encrypt --key "world" < input.txt > output.txt
 cargo run encrypt --key "world" --output ./output.txt < input.txt
 ```
 
-Si vous déchiffrer à la place de chiffrer, remplacez la commande `encrypt` par `decrypt`.
+Si vous souhaitez déchiffrer à la place de chiffrer, remplacez la commande `encrypt` par `decrypt`.
 
 ### Détails sur l'implémentation
 
@@ -34,7 +34,7 @@ Si la clé est vide, on renvoie le texte inchangé.
 
 ### Jeu d'essais
 
-Prennons le texte suivant et essayons de le chiffrer avec la clé `VEXCITED`.
+Prenons le texte suivant et essayons de le chiffrer avec la clé `VEXCITED`.
 
 ```plaintext
 Those scrapers are nothing more than lettuces. One cannot separate bedrooms from presto overcoats. A patio of the clave is assumed to be a foetal rhinoceros. A poison sees a joke as a dormie school. This is not to discredit the idea that a difference can hardly be considered a clingy cornet without also being a fahrenheit. However, the galliard pajama comes from an unglad beef. The zeitgeist contends that the vorant purchase comes from a mimic unit. Far from the truth, a himalayan of the relish is assumed to be an extrorse pear. If this was somewhat unclear, a chime of the toenail is assumed to be a spangly move. The diaphragm of a desert becomes a festive kitten.
