@@ -184,4 +184,11 @@ On voit que les caractères ne se répètent pas et on a bien 64 caractères.
 
 ## Exercice 3 : Mot de passe maître
 
-TODO
+Pour stocker le mot de passe maître, je place un fichier `mpwd.txt` à l'endroit où est exécuté le programme, vous pourrez retrouver comment je fais cela dans `src/storage.rs`.
+
+Lorsque le programme s'exécute, il va vérifier si le fichier existe, si oui, il va demander à l'utilisateur s'il veut utiliser ce mot de passe ou s'il veut en choisir un nouveau. Au cas où le fichier n'existe pas, le programme demande à l'utilisateur de saisir un mot de passe maître directement.
+
+Lors de la saisie du mot de passe maître, le programme va demander à l'utilisateur de le saisir une deuxième fois pour vérifier qu'il n'y a pas d'erreur de frappe.
+
+Une fois la saisie faite, le programme va stocker le mot de passe maître dans le fichier `mpwd.txt`.
+
