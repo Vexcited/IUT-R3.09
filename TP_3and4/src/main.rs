@@ -7,7 +7,7 @@ mod storage;
 
 fn prompt_master_password() -> String {
   let master = prompt_secret("Mot de passe maître <caché> :")
-  .expect("Le mot de passe maître est requis");
+    .expect("Le mot de passe maître est requis");
 
   if !check_allowed_charset(&master) {
     eprintln!("Le mot de passe maître contient des caractères non autorisés");
