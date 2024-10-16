@@ -192,3 +192,65 @@ Lors de la saisie du mot de passe maître, le programme va demander à l'utilisa
 
 Une fois la saisie faite, le programme va stocker le mot de passe maître dans le fichier `mpwd.txt`.
 
+## Exercice 4 : Attaques sur des mots de passe
+
+On va premièrement prendre un mot de passe maître de 10 caractères : `MonMDP!123`.
+
+Sachant que la liste des caractères autorisés sont les suivants : `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?@#$%&*()[]|:;,.`,
+on a donc 79 caractères possibles sur 10 caractères, soit `79^10` (= `9468276082626847201`) possibilités.
+
+Ainsi, la probabilité de trouver le mot de passe maître est de `1/9468276082626847201` soit `1.056e-19` (= `0.0000000000000000001056`)
+
+On va maintenant générer des mots de passe d'un caractère :
+- Unilim : `)`
+- Amazon : `n`
+- Netflix : `q`
+
+On souhaite maintenant trouver un mot de passe maître qui donnera le même mot de passe que celui produit.
+
+```bash
+cargo run --example attack
+```
+
+Après 13 tentatives, on trouve un mot de passe maître qui donne le même résultat pour `Unilim` : `AAAAAAAAAM`.
+
+Théoriquement, pour un mot de passe généré d'un seul caractère (N=1), il y a 79 sorties possibles.
+La probabilité de collision pour un essai est donc de 1/79.
+
+Pour estimer le nombre d'essais nécessaires pour trouver une collision, nous pouvons utiliser l'approximation du paradoxe des anniversaires :
+
+- `√(π * n / 2)`, où n est le nombre de sorties possibles (79 dans notre cas).
+- `√(π * 79 / 2) ≈ 11.14`
+
+Donc, en théorie, on s'attendrait à trouver une collision après environ 11 essais.
+Ce qui est à peu près ce que nous avons trouvé : 13 essais.
+
+---
+
+Maintenant, nous allons trouver un mot de passe maître qui provoque une collision pour les trois tags.
+
+Après 1131248, on trouve un mot de passe maître qui donne le même résultat pour `Unilim`, `Amazon` et `Netflix` : `AAAAAACXUu`.
+
+On remarque que le nombre d'essais est bien plus grand que pour un seul tag, ce qui est normal car la probabilité de collision est plus faible.
+
+---
+
+Recommençons avec N = 2 maintenant.
+
+- 1er temps, `6908` tentatives pour `Unilim` avec le mot de passe maître : `AAAAAAABIi`
+- 2ème temps, ???? tentatives, après plus de 50 millions de tentatives, on n'a pas trouvé de mot de passe maître qui donne le même résultat pour `Unilim`, `Amazon` et `Netflix`.
+
+---
+
+Recommençons avec N = 3 maintenant.
+
+- 1er temps, `572904` tentatives pour `Unilim` avec le mot de passe maître : `AAAAAABM!|`
+- 2ème temps, ???? tentatives, après plus de 100 millions de tentatives, on n'a pas trouvé de mot de passe maître qui donne le même résultat pour `Unilim`, `Amazon` et `Netflix`.
+
+---
+
+Pour conclure, une utilisation correcte du générateur serait de générer mot de passe assez long pour éviter le plus possible les collisions qui permettrait de retrouver le mot de passe maître.
+
+Il faut aussi choisir un mot de passe maître long pour augmenter le nombre de possibilités lors d'une attaque par force brute.
+
+Il faut aussi que ce mot de passe soit complexe pour éviter les attaques par dictionnaire.

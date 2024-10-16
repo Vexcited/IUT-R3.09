@@ -38,7 +38,7 @@ pub fn check_allowed_charset(text: &str) -> bool {
 /// - les caractères invisibles
 /// 
 /// et d'autres caractères spéciaux.
-const ALLOWED_CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?@#$%&*()[]|:;,.";
+pub const ALLOWED_CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?@#$%&*()[]|:;,.";
 const ALLOWED_CHARSET_LEN: usize = ALLOWED_CHARSET.len();
 
 pub fn generate_password(master: &str, tag: &str, length: usize) -> Result<String, String> {
