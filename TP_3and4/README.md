@@ -1,14 +1,16 @@
 # Rapport : TP 3 et 4
 
+> Rédigé par Mikkel ALMONTE--RINGAUD, G4B.
+
 ## Préparation
 
 Dans les 3 langages imposés, j'ai pu trouver des bibliothèques de primitives cryptographiques qui fournissent à minima SHA1, SHA256 et HMAC.
 
-- Java : `bouncycastle` (<https://www.bouncycastle.org/>) et `javax.crypto` (fourni dans Java)
-- Rust : L'ensemble de bibliothèques que fourni `RustCrypto` dans `hashes`, <https://github.com/RustCrypto/hashes> et `MACs`, <https://github.com/RustCrypto/MACs>.
-- Python : `hashlib` (<https://docs.python.org/3/library/hashlib.html>) et `hmac` pour <https://docs.python.org/3/library/hmac.html> (fournis dans Python)
+- Java : `bouncycastle` (<https://www.bouncycastle.org/>) et `javax.crypto` qui est fourni dans Java ;
+- Rust : L'ensemble de bibliothèques que fourni `RustCrypto` dans `hashes`, <https://github.com/RustCrypto/hashes> et `MACs`, <https://github.com/RustCrypto/MACs> ;
+- Python : `hashlib` (<https://docs.python.org/3/library/hashlib.html>) et `hmac` (<https://docs.python.org/3/library/hmac.html>) qui sont fournis dans Python
 
-TODO: expliquer pourquoi rust >>
+J'ai décidé de partir sur Rust pour sa simplicité et sa documentation de haute qualité. Les bibliothèques expliquent simplement et complètement comment fonctionne chaque fonctionnalités et donnent même des exemples.
 
 ## Exercice 1 : Des mots de passe tout simples
 
@@ -21,10 +23,10 @@ const ALLOWED_CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstu
 ```
 
 Les caractères que l'on autorise sont :
-- lettres majuscules : A-Z
-- lettres minuscules : a-z
-- chiffres : 0-9
-- les caractères spéciaux suivants : !?@#$%&*()[]|:;,.
+- lettres majuscules : `A-Z`
+- lettres minuscules : `a-z`
+- chiffres : `0-9`
+- les caractères spéciaux suivants : `!?@#$%&*()[]|:;,.`
 
 Ainsi, nous n'autorisons pas :
 - les espaces
@@ -109,8 +111,8 @@ Le mot de passe maître peut être faible et pourtant, le mot de passe généré
 - `MonMDP!` et `unilim` : `6*hG0|6z`, on a bien 8 caractères et on a des caractères spéciaux.
 - `kiwi` et `facebook` : `)EW*UuH?`, on a bien 8 caractères et on a des caractères spéciaux.
 - `azerty` et `qwerty` : `NTQu%1fR`, on a bien 8 caractères et on a des caractères spéciaux.
-- `MonMDP ` et `unilim` : erreur, car espace dans `master`
-- `MonMDP` et `unilim ` : erreur, car espace dans `tag`
+- `MonMDP ‎` et `unilim` : erreur, car espace dans `master`
+- `MonMDP` et `unilim ‎` : erreur, car espace dans `tag`
 
 > Par ailleurs, vous pouvez retrouver ces tests dans `src/password.rs` dans `mod tests`.
 > Vous pouvez ainsi exécuter les tests en utilisant `cargo test`.
@@ -154,7 +156,7 @@ On utilise toujours SHA-256 ici car c'est toujours suffisant.
 
 #### `MonMDP!` et `unilim` de taille 24
 
-```
+```plaintext
 6*hG0|6zdcc5OiInw[lGAiuv`
 ```
 
@@ -166,7 +168,7 @@ Celui là est important car il va nous permettre de tester la non répétition d
 
 Ici, on va donc tester si on a bien 2056 caractères qui ne se répètent pas malgré la répétition de la chaîne de caractères.
 
-```
+```plaintext
 )EW*UuH?|qi8tpr#jQlrp!4:UXG?[u7iYk2W0.nQb|$N,]:S%w*:]PJc03mQZ.M$4&H2Ff)w7bTteacyUBWcavp8FI(w5fsTJVnHl?YBM7z,!68D0h286A]NloXBK?;zp1)n*Q4hsMEePLNjF#HNLgat*[3hqQdE]GY)WwJ#;sk!vrt%lSntr@6,WZI#|w9kam4Y2BpSd;&PA:,U*y),:RLe25oSbBO&6(J4Hh]y9dVvgce0WDYecxr!HK[y7huVLXpJn#aDO91A@8!F2j4!8C:PnqZDM#.1r3]p)S6juOGgRNPlH%JPNicv)|5jsSfG:Ia]YyL%.um@xtv*nUpvt$8AYbK%;y?mco6a4DrUf.(RC,AW)0]A,TNg47qUdDQ(8[L6Jj:0?fXxieg2YFagezt@JM|09jwXNZrLp%cFQ?3C$!@H4l6@!E,RpsbFO%B3t5:r]U8lwQIiTPRnJ*LRPkex];7luUhI,Kc:a0N*Bwo$zvx)pWrxv&!CadM*.0#oeq8c6FtWhB[TEACY]2:CAVPi69sWfFS[!|N8Ll,2#hZzkgi4aHcig1v$LO;2?lyZPbtNr*eHS#5E&@$J6n8$@GATrudHQ*D5v7,t:W!nySKkVRTpL)NTRmgz:.9nwWjKAMe,c2P)Dyq&1xz]rYtzx(@EcfO)B2%qgs!e8HvYjD|VGCEa:4,ECXRk8?uYhHU|@;P!NnA4%jb1mik6cJeki3x&NQ.4#n0bRdvPt)gJU%7G($&L8p!&$ICVtwfJS)F7x9Av,Y@p0UMmXTVrN]PVToi1,B?pyYlMCOgAe4R]F0s(3z1:tav1z[$GehQ]D4*siu@g!JxalF;XIEGc,6AGEZTm!#wajJW;$.R@PpC6*ld3okm8eLgmk5z(PSB6%p2dTfxRv]iLW*9I[&(N!r@(&KEXvyhLU]H9z?CxAa$r2WOoZVXtP:RXVqk3AD#r0anOEQiCg6T:H2u[513,vcx31|&IgjS:F6)ukw$i@LzcnH.ZKGIeA8CIGbVo@%yclLY.&BT$RrE8)nf5qmo!gNiom71[RUD8*r4fVhzTx:kNY)?K|([P@t$[(MGZx0jNW:J?1#EzCc&t4YQqbXZvR,TZXsm5CF%t2cpQGSkEi8V,J4w|735Axez53;(KilU,H8]wmy&k$N1epJBbMIKgC!EKIdXq$*0enNaB(DV&TtG!]ph7soq@iPkqo93|TWF!)t6hXj1Vz,mPa]#M;[|R$v&|[OIbz2lPY,L#3%G1Ee(v6aSsdZbxTAVbZuo7EH*v4erSIUmGk!XAL6y;957Czg175.[MknWAJ!:yo0(m&P3grLDdOKMiE@GMKfZs&)2gpPcD[FX(VvI@:rj9uqs$kRmsq?5;VYH@]v8jZl3X1AoRc:%O.|;T&x(;|QKd14nRaAN%5*I3Gg[x8cUufbdzVCXdbwq9GJ)x6gtUKWoIm@ZCN80.?79E1i397B|OmpYCL@,0q2[o(R5itNFfQMOkG$IOMhbu(]4irReF|HZ[XxK$,tl?wsu&mTous#7.XaJ$:x!lbn5Z3CqTe,*QB;.V(z[.;SMf36pTcCP*7)K5Ii|z!eWwhdf1XEZfdys?IL]z8ivWMYqKo$bEP!2B#9?G3k5?9D;QoraEN$A2s4|q[T7kvPHhSOQmI&KQOjdw[:6ktTgH;Jb|ZzM&Avn#yuw(oVqwu%9BZcL&,z@ndp7b5EsVgA)SD.BX[1|B.UOh58rVeER)9]M7Kk;1@gYyjfh3ZGbhf0u#KN:1!kxYOasMq&dGR@4D%?#I5m7#?F.SqtcGP&C4u6;s|V9mxRJjUQSoK(MSQlfy|,8mvViJ.Ld;b1O(Cxp%0wy[qXsyw*?DbeN(A1$pfr9d7GuXiC]UFBDZ|3;DBWQj7!tXgGT]?:O9Mm.3$ia0lhj5bIdjh2w%MP,3@mzaQcuOs(fIT$6F*#%K7o9%#HBUsveIR(E6w8.u;X?ozTLlWSUqM[OUSnh0;A!oxXkLBNf.d3Q[Ezr*2y0|sZu0y)#FdgP[C3&rht?f9IwZkE:WHDFb;5.FDYSl9@vZiIV:#,Q?OoB5
 ```
 
@@ -176,7 +178,7 @@ On a bien 2056 caractères et des caractères spéciaux sans répétition.
 
 On vérifie le double des caractères générés par rapport à la taille du hash SHA-256.
 
-```
+```plaintext
 QcdHxAVBYLOY:6#IElWgV.o7zt,vGYR]w89nCg1h4ru4cLSok*2@1f[ME,eAm4xa
 ```
 
@@ -194,6 +196,9 @@ Une fois la saisie faite, le programme va stocker le mot de passe maître dans l
 
 ## Exercice 4 : Attaques sur des mots de passe
 
+> Le code source pour l'attaque par force brute est dans `attack/main.rs`.
+> Vous pouvez l'exécuter en utilisant `cargo run --example attack`.
+
 On va premièrement prendre un mot de passe maître de 10 caractères : `MonMDP!123`.
 
 Sachant que la liste des caractères autorisés sont les suivants : `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?@#$%&*()[]|:;,.`,
@@ -207,10 +212,6 @@ On va maintenant générer des mots de passe d'un caractère :
 - Netflix : `q`
 
 On souhaite maintenant trouver un mot de passe maître qui donnera le même mot de passe que celui produit.
-
-```bash
-cargo run --example attack
-```
 
 Après 13 tentatives, on trouve un mot de passe maître qui donne le même résultat pour `Unilim` : `AAAAAAAAAM`.
 
